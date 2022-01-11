@@ -12,7 +12,7 @@ namespace WebApplicationMVCTanisma.Controllers
         // GET: Ogrenci
         public ActionResult Listele()
         {
-            List<Ogrenci> ogrList=Ogrenci.OgrencileriGetir();
+            List<Ogrenci> ogrList = Ogrenci.OgrencileriGetir();
             return View(ogrList);
         }
         [HttpGet]
@@ -36,9 +36,9 @@ namespace WebApplicationMVCTanisma.Controllers
         public ActionResult Guncelle(int id)
         {
             //gelen id>0 ise benim listemde onu bul ve view'e gönder.
-            if (id>0)
+            if (id > 0)
             {
-                Ogrenci bulunanOgr =Ogrenci.OgrenciListesi.FirstOrDefault(x => x.Id == id);
+                Ogrenci bulunanOgr = Ogrenci.OgrenciListesi.FirstOrDefault(x => x.Id == id);
                 return View(bulunanOgr);
             }
             return View();
@@ -47,7 +47,7 @@ namespace WebApplicationMVCTanisma.Controllers
         public ActionResult Guncelle(Ogrenci ogr)
         {
             Ogrenci guncellenecekEskiOgr = Ogrenci.OgrenciListesi.FirstOrDefault(x => x.Id == ogr.Id);
-            if (guncellenecekEskiOgr!=null)
+            if (guncellenecekEskiOgr != null)
             {
                 //Öğrenciyi buldun.Bulduğun bu öğrenciye yeni değerlerini ata.
                 //= işaretinin sağında Güncelle sayfasına girdiğimiz bilgiyi aldık ve bizdeki mevcut öğrenciye atadık.
@@ -56,6 +56,31 @@ namespace WebApplicationMVCTanisma.Controllers
                 guncellenecekEskiOgr.DogumTarihi = ogr.DogumTarihi;
             }
             return RedirectToAction("Listele");
+        }
+        [HttpGet]
+        public ActionResult Sil(int id)
+        {
+            var silinecekOgr = Ogrenci.OgrenciListesi.FirstOrDefault(x => x.Id == id);
+            return View(silinecekOgr);
+        }
+        [HttpPost]
+        public ActionResult Sil(Ogrenci ogr)
+        {
+            if (ogr.Id > 0)
+            {
+                Ogrenci.OgrenciListesi.Remove(ogr);
+            }
+            return RedirectToAction("Listele");
+        }
+        [HttpPost]
+        public ActionResult Sil2(Ogrenci ogr)
+        {
+            if (ogr.Id>0)
+            {
+                Ogrenci.OgrenciListesi.Remove(ogr);
+                return Json(new { success = true });
+            }
+            return Json(new { success = false, error = "Beklenmedik bir hata oluştu!" });
         }
     }
 }
